@@ -1,0 +1,30 @@
+interface Event {
+  fromuserCode: Number;
+  touserCode: Number;
+  name: String;
+  impNumber: String;
+  timeClass: Boolean;
+  createTime: String;
+  processedTime: String;
+  updateTime: String;
+  sendTime: String;
+  receiveTime: String;
+  eventClass: string;
+  eventClassCode: String;
+  sendStatus: Number;
+  receiveStatus: Number;
+  handleStatus: Number;
+  Deadline: String;
+  routeCode: String;
+  detail_0:String;
+  detail_1:String;
+  detail_2:String;
+  detail_3:String;
+  detail_4:String;
+  detail_5:String;
+  detail_6:String;
+  detail_7:String;
+  detail_8:String;
+  detail_9:String;
+  detail_10:String;
+}

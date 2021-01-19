@@ -1,0 +1,27 @@
+{
+  "name": "manager-system",
+  "version": "2.0.0",
+  "description": "CG",
+  "main": "./dist/app.js",
+  "scripts": {
+    "start": "node ./dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "LateXLin"
+  ],
+  "author": "LateXLin",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/boom": "^9.1.1",
+    "@types/boom": "^7.3.0",
+    "@types/express": "^4.17.11",
+    "@types/mysql": "^2.15.17",
+    "ajv": "^7.0.3",
+    "dayjs": "^1.10.3",
+    "express": "^4.17.1",
+    "knex": "^0.21.16",
+    "mysql": "^2.18.1",
+    "zero-fill": "^2.2.4"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "type": "object",
+  "required": ["fromuserCode", "touserCode", "name", "eventClass", "timeClass"]
+}
