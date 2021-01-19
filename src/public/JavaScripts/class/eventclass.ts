@@ -1,4 +1,4 @@
 interface EventClss {
-  eventClass: String;
-  eventClassCode: String;
+  classname: String;
+  code: String;
 }

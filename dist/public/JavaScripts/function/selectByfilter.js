@@ -106,8 +106,8 @@ function selectByfilter(data) {
                         resolve({
                             data: events,
                             totalCount: CountResult[0].CountResult,
-                            pageSize: pageSize,
-                            currPage: currPage,
+                            pageSize: pageSize || "",
+                            currPage: currPage || "",
                         });
                     });
                     return [2 /*return*/];

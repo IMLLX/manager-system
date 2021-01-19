@@ -9,7 +9,7 @@ var toSQL_1 = __importDefault(require("../public/JavaScripts/function/toSQL"));
 var knex_1 = __importDefault(require("../public/JavaScripts/static/knex"));
 var router = express_1.default.Router();
 router.get("/active", function (req, res) {
-    var touserCode = req.body.touserCode || req.query.touserCode;
+    var touserCode = req.query.touserCode;
     selectPoll_1.default(touserCode)
         .catch(function (reason) {
         res.json({ message: reason, success: true, statusCode: 200 });

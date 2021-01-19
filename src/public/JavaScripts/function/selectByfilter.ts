@@ -60,8 +60,8 @@ function selectByfilter(data: any) {
       resolve({
         data: events,
         totalCount: CountResult[0].CountResult,
-        pageSize: pageSize,
-        currPage: currPage,
+        pageSize: pageSize || "",
+        currPage: currPage || "",
       });
     });
   });

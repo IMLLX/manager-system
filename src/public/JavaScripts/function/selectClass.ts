@@ -1,7 +1,7 @@
 import knex from "../static/knex";
 import toSQL from "./toSQL";
 
-function selectClass(data: any): Promise<any> {
+function selectClass(data: any): Promise<EventClss> {
   return new Promise((resolve, reject) => {
     var t = knex("eventinfo").select("classname", "code").where(data).toQuery();
     toSQL(t).then((result) => {

@@ -39,7 +39,7 @@ function checkEvent(event: Event) {
       reject("不能创建已完成事件");
     } else if (fromuser.error || touser.error) {
       reject("未知的发/收事件者,创建事件失败");
-    } else resolve(1);
+    } else resolve(Class);
   });
 }
 
@@ -70,14 +70,17 @@ function createEvent(event: Event) {
     //   eventClassCode: event.eventClassCode,
     // }).then();
     checkEvent(event) // 创建事件前的检查
-      .then(async () => {
+      .then(async (Class: any) => {
         if (event.sendStatus === 1) {
           // 若创建发送事件
           event.impNumber = await getImpnum(
-            event.eventClass,
-            event.eventClassCode
+            // event.eventClass,
+            // event.eventClassCode
+            Class.classname,
+            Class.code
           );
         }
+        event.eventClassCode = Class.code;
         var to = knex("eventdata").insert(event).toQuery();
         toSQL(to)
           .then((res: any) => {

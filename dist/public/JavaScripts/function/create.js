@@ -91,7 +91,7 @@ function checkEvent(event) {
                         reject("未知的发/收事件者,创建事件失败");
                     }
                     else
-                        resolve(1);
+                        resolve(Class);
                     return [2 /*return*/];
             }
         });
@@ -124,7 +124,7 @@ function createEvent(event) {
         //   eventClassCode: event.eventClassCode,
         // }).then();
         checkEvent(event) // 创建事件前的检查
-            .then(function () { return __awaiter(_this, void 0, void 0, function () {
+            .then(function (Class) { return __awaiter(_this, void 0, void 0, function () {
             var _a, to;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -132,12 +132,16 @@ function createEvent(event) {
                         if (!(event.sendStatus === 1)) return [3 /*break*/, 2];
                         // 若创建发送事件
                         _a = event;
-                        return [4 /*yield*/, getimpnum_1.default(event.eventClass, event.eventClassCode)];
+                        return [4 /*yield*/, getimpnum_1.default(
+                            // event.eventClass,
+                            // event.eventClassCode
+                            Class.classname, Class.code)];
                     case 1:
                         // 若创建发送事件
                         _a.impNumber = _b.sent();
                         _b.label = 2;
                     case 2:
+                        event.eventClassCode = Class.code;
                         to = knex_1.default("eventdata").insert(event).toQuery();
                         toSQL_1.default(to)
                             .then(function (res) {

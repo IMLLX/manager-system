@@ -5,7 +5,7 @@ import knex from "../public/JavaScripts/static/knex";
 var router = express.Router();
 
 router.get("/active", function (req, res) {
-  var touserCode = req.body.touserCode || req.query.touserCode;
+  var touserCode: any = req.query.touserCode;
   selectPoll(touserCode)
     .catch((reason) => {
       res.json({ message: reason, success: true, statusCode: 200 });
