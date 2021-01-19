@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __importDefault(require("express"));
+var body_parser_1 = __importDefault(require("body-parser"));
+var http_1 = __importDefault(require("http"));
+var createRouter_1 = __importDefault(require("./router/createRouter"));
+var selectRouter_1 = __importDefault(require("./router/selectRouter"));
+var updateRouter_1 = __importDefault(require("./router/updateRouter"));
+var polleventRouter_1 = __importDefault(require("./router/polleventRouter"));
+process.env.ENV = "DEV";
+var app = express_1.default();
+var port = process.env.PORT || 3000;
+app.set("port", port);
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: false }));
+app.use("/create", createRouter_1.default);
+app.use("/update", updateRouter_1.default);
+app.use("/select", selectRouter_1.default);
+app.use("/poll", polleventRouter_1.default);
+var server = http_1.default.createServer(app);
+server.listen(port);
+exports.default = app;
