@@ -10,7 +10,7 @@ function selectClass(data) {
         var t = knex_1.default("eventinfo").select("classname", "code").where(data).toQuery();
         toSQL_1.default(t).then(function (result) {
             if (result[0]) {
-                resolve(result[0]);
+                resolve(result);
             }
             else {
                 reject("未知的事件类型");

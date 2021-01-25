@@ -69,6 +69,7 @@ function updateHandler(
               toSQL(t).then((result) => {
                 if (successResult(result)) {
                   selectEvent(eventId).then((event) => {
+                    event.touserCode = JSON.parse(event.touserCode);
                     createUsersPoll({
                       impNumber: event.impNumber,
                       touserCodes: event.touserCode,

@@ -121,6 +121,7 @@ function updateHandler(param, eventId, status) {
                         toSQL_1.default(t).then(function (result) {
                             if (successResult(result)) {
                                 selectEvent_1.default(eventId).then(function (event) {
+                                    event.touserCode = JSON.parse(event.touserCode);
                                     createPoll_1.default({
                                         impNumber: event.impNumber,
                                         touserCodes: event.touserCode,

@@ -103,7 +103,7 @@ function checkEvent(event) {
                         reject("未知的发/收事件者,创建事件失败");
                     }
                     else
-                        resolve(Class);
+                        resolve(Class[0]);
                     return [2 /*return*/];
             }
         });
@@ -168,14 +168,17 @@ function createEvent(event) {
                                 var insertId = res.insertId;
                                 eventsAdder(insertId, event.touserCode);
                                 selectEvent_1.default(insertId).then(function (event) {
-                                    createPoll_1.default({
-                                        impNumber: event.impNumber,
-                                        touserCodes: event.touserCode,
-                                        fromuserCode: event.fromuserCode,
-                                        detail: event.detail_0,
-                                        eventId: insertId,
-                                        isReceived: false,
-                                    });
+                                    event.touserCode = JSON.parse(event.touserCode);
+                                    if (event.sendStatus === 1)
+                                        // 如果发送事件
+                                        createPoll_1.default({
+                                            impNumber: event.impNumber,
+                                            touserCodes: event.touserCode,
+                                            fromuserCode: event.fromuserCode,
+                                            detail: event.detail_0,
+                                            eventId: insertId,
+                                            isReceived: false,
+                                        });
                                     resolve(event);
                                 });
                             }

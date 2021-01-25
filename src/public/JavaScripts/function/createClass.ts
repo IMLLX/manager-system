@@ -34,10 +34,9 @@ function createClass(classname: string) {
               })
               .toQuery();
             toSQL(t).then(async (result) => {
-              console.log(result);
               if (!result.warningCount) {
-                var Class = await selectClass({ classname: classname });
-                resolve(Class);
+                var Class:any = await selectClass({ classname: classname });
+                resolve(Class[0]);
               }
             });
           });

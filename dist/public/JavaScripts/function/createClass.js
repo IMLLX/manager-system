@@ -78,12 +78,11 @@ function createClass(classname) {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    console.log(result);
                                     if (!!result.warningCount) return [3 /*break*/, 2];
                                     return [4 /*yield*/, selectClass_1.default({ classname: classname })];
                                 case 1:
                                     Class = _a.sent();
-                                    resolve(Class);
+                                    resolve(Class[0]);
                                     _a.label = 2;
                                 case 2: return [2 /*return*/];
                             }

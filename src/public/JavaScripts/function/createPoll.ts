@@ -2,12 +2,15 @@ import knex from "../static/knex";
 import toSQL from "./toSQL";
 
 function createUsersPoll(poll: Poll) {
-  var polldata = poll;
+  // var polldata = poll;
   var pros: Array<Promise<any>> = [];
-  delete polldata.touserCodes;
-  poll.touserCodes?.forEach((ele) => {
-    polldata.touserCode = ele;
-    pros.push(createPoll(polldata));
+  // polldata.touserCodes = undefined;
+  // console.log();
+  var toCodes = Object.assign([], poll.touserCodes);
+  delete poll.touserCodes;
+  toCodes.forEach((ele) => {
+    poll.touserCode = ele;
+    pros.push(createPoll(poll));
   });
   return pros;
 }

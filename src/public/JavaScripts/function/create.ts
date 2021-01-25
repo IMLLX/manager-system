@@ -37,7 +37,7 @@ function checkEvent(event: Event) {
       const touserCode = event.touserCode[index];
       touser.push(await selectUser(touserCode));
     }
-    var Class = await selectClass({
+    var Class: any = await selectClass({
       classname: event.eventClass,
     }).catch((reason) => {
       reject(reason);
@@ -46,7 +46,7 @@ function checkEvent(event: Event) {
       reject("不能创建已完成事件");
     } else if (fromuser.error || touser.error) {
       reject("未知的发/收事件者,创建事件失败");
-    } else resolve(Class);
+    } else resolve(Class[0]);
   });
 }
 
@@ -101,14 +101,17 @@ function createEvent(event: Event) {
               var insertId = res.insertId;
               eventsAdder(insertId, event.touserCode);
               selectEvent(insertId).then((event) => {
-                createUsersPoll({
-                  impNumber: event.impNumber,
-                  touserCodes: event.touserCode,
-                  fromuserCode: event.fromuserCode,
-                  detail: event.detail_0,
-                  eventId: insertId,
-                  isReceived: false,
-                });
+                event.touserCode = JSON.parse(event.touserCode);
+                if (event.sendStatus === 1)
+                  // 如果发送事件
+                  createUsersPoll({
+                    impNumber: event.impNumber,
+                    touserCodes: event.touserCode,
+                    fromuserCode: event.fromuserCode,
+                    detail: event.detail_0,
+                    eventId: insertId,
+                    isReceived: false,
+                  });
                 resolve(event);
               });
             }

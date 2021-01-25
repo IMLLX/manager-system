@@ -6,7 +6,7 @@ function selectClass(data: any): Promise<EventClss> {
     var t = knex("eventinfo").select("classname", "code").where(data).toQuery();
     toSQL(t).then((result) => {
       if (result[0]) {
-        resolve(result[0]);
+        resolve(result);
       } else {
         reject("未知的事件类型");
       }
