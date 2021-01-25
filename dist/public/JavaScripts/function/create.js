@@ -65,25 +65,37 @@ var toSQL_1 = __importDefault(require("./toSQL"));
 //       });
 //   });
 // }
+// 检查创建的事件是否合法
 function checkEvent(event) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-        var fromuser, touser, Class;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var fromuser, touser, index, touserCode, _a, _b, Class;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0: return [4 /*yield*/, selectUser_1.default(event.fromuserCode)];
                 case 1:
-                    fromuser = _a.sent();
-                    return [4 /*yield*/, selectUser_1.default(event.touserCode)];
+                    fromuser = _c.sent();
+                    touser = [];
+                    index = 0;
+                    _c.label = 2;
                 case 2:
-                    touser = _a.sent();
-                    return [4 /*yield*/, selectClass_1.default({
-                            classname: event.eventClass,
-                        }).catch(function (reason) {
-                            reject(reason);
-                        })];
+                    if (!(index < event.touserCode.length)) return [3 /*break*/, 5];
+                    touserCode = event.touserCode[index];
+                    _b = (_a = touser).push;
+                    return [4 /*yield*/, selectUser_1.default(touserCode)];
                 case 3:
-                    Class = _a.sent();
+                    _b.apply(_a, [_c.sent()]);
+                    _c.label = 4;
+                case 4:
+                    index++;
+                    return [3 /*break*/, 2];
+                case 5: return [4 /*yield*/, selectClass_1.default({
+                        classname: event.eventClass,
+                    }).catch(function (reason) {
+                        reject(reason);
+                    })];
+                case 6:
+                    Class = _c.sent();
                     if (event.handleStatus === 1) {
                         reject("不能创建已完成事件");
                     }
@@ -116,6 +128,15 @@ function checkEvent(event) {
 //       });
 //   });
 // }
+function eventsAdder(insertId, touserCode) {
+    touserCode = JSON.parse(touserCode);
+    touserCode.forEach(function (code) {
+        var t = knex_1.default("events")
+            .insert({ eventId: insertId, touserCode: code })
+            .toQuery();
+        toSQL_1.default(t);
+    });
+}
 function createEvent(event) {
     var _this = this;
     return new Promise(function (resolve, reject) {
@@ -132,30 +153,29 @@ function createEvent(event) {
                         if (!(event.sendStatus === 1)) return [3 /*break*/, 2];
                         // 若创建发送事件
                         _a = event;
-                        return [4 /*yield*/, getimpnum_1.default(
-                            // event.eventClass,
-                            // event.eventClassCode
-                            Class.classname, Class.code)];
+                        return [4 /*yield*/, getimpnum_1.default(Class.classname, Class.code)];
                     case 1:
                         // 若创建发送事件
                         _a.impNumber = _b.sent();
                         _b.label = 2;
                     case 2:
                         event.eventClassCode = Class.code;
+                        event.touserCode = JSON.stringify(event.touserCode);
                         to = knex_1.default("eventdata").insert(event).toQuery();
                         toSQL_1.default(to)
                             .then(function (res) {
                             if (!res.warningCount) {
                                 var insertId = res.insertId;
+                                eventsAdder(insertId, event.touserCode);
                                 selectEvent_1.default(insertId).then(function (event) {
                                     createPoll_1.default({
                                         impNumber: event.impNumber,
-                                        touserCode: event.touserCode,
+                                        touserCodes: event.touserCode,
                                         fromuserCode: event.fromuserCode,
                                         detail: event.detail_0,
                                         eventId: insertId,
                                         isReceived: false,
-                                    }).catch(function () { });
+                                    });
                                     resolve(event);
                                 });
                             }

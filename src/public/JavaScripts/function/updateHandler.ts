@@ -1,5 +1,5 @@
 import knex from "../static/knex";
-import createPoll from "./createPoll";
+import createUsersPoll from "./createPoll";
 import getImpnum from "./getimpnum";
 import selectEvent from "./selectEvent";
 import toSQL from "./toSQL";
@@ -69,14 +69,14 @@ function updateHandler(
               toSQL(t).then((result) => {
                 if (successResult(result)) {
                   selectEvent(eventId).then((event) => {
-                    createPoll({
+                    createUsersPoll({
                       impNumber: event.impNumber,
-                      touserCode: event.touserCode,
+                      touserCodes: event.touserCode,
                       fromuserCode: event.fromuserCode,
                       detail: event.detail_0,
                       eventId: eventId,
                       isReceived: false,
-                    }).catch(() => {});
+                    });
                     resolve(event);
                   });
                 } else {

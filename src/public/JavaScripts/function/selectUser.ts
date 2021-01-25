@@ -3,9 +3,19 @@ import toSQL from "./toSQL";
 
 function selectUser(userClientCode: Number) {
   return new Promise((resolve, reject) => {
-    var t = knex("role_info")
-      .select("role_dpCode", "role_name", "role_code", "client_role_code")
-      .where({ client_role_code: userClientCode })
+    var t = knex("tool_user")
+      .select(
+        "name",
+        "username",
+        "sex",
+        "role",
+        "user_code",
+        "client_role",
+        "role_type",
+        "dept_code",
+        "post_code"
+      )
+      .where({ user_code: userClientCode })
       .toQuery();
     toSQL(t)
       .then((result: any) => {

@@ -40,62 +40,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var knex_1 = __importDefault(require("../static/knex"));
-var selectUser_1 = __importDefault(require("./selectUser"));
+var addRoleinfo_1 = __importDefault(require("./addRoleinfo"));
 var toSQL_1 = __importDefault(require("./toSQL"));
-function selectEvent(id, touserCode) {
+function selectTooluser(data) {
     var _this = this;
     return new Promise(function (resolve, reject) {
-        var t = knex_1.default("eventdata").select("*").where({ Id: id }).toQuery();
-        toSQL_1.default(t)
-            .then(function (event) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, _b, toUser, touserCodes, index, touserCode_1, _c, _d;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+        var q = knex_1.default("tool_user")
+            .select("name", "username", "role", "user_code", "dept_code", "post_code", "client_role", "role_type")
+            .where(data)
+            .toQuery();
+        toSQL_1.default(q).then(function (result) { return __awaiter(_this, void 0, void 0, function () {
+            var index, user, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        if (!event[0]) return [3 /*break*/, 9];
-                        event = event[0];
-                        _a = event;
-                        return [4 /*yield*/, selectUser_1.default(event.fromuserCode)];
-                    case 1:
-                        _a.fromUser = _e.sent();
-                        if (!touserCode) return [3 /*break*/, 3];
-                        _b = event;
-                        return [4 /*yield*/, selectUser_1.default(touserCode)];
-                    case 2:
-                        _b.toUser = _e.sent();
-                        return [3 /*break*/, 8];
-                    case 3:
-                        toUser = [];
-                        touserCodes = JSON.parse(event.touserCode);
+                        if (!result[0]) return [3 /*break*/, 5];
                         index = 0;
-                        _e.label = 4;
-                    case 4:
-                        if (!(index < touserCodes.length)) return [3 /*break*/, 7];
-                        touserCode_1 = touserCodes[index];
-                        _d = (_c = toUser).push;
-                        return [4 /*yield*/, selectUser_1.default(touserCode_1)];
-                    case 5:
-                        _d.apply(_c, [_e.sent()]);
-                        _e.label = 6;
-                    case 6:
+                        _b.label = 1;
+                    case 1:
+                        if (!(index < result.length)) return [3 /*break*/, 4];
+                        user = result[index];
+                        _a = user;
+                        return [4 /*yield*/, addRoleinfo_1.default(user.dept_code, user.post_code, user.role_type)];
+                    case 2:
+                        _a.role_info = _b.sent();
+                        _b.label = 3;
+                    case 3:
                         index++;
-                        return [3 /*break*/, 4];
-                    case 7:
-                        event.toUser = toUser;
-                        _e.label = 8;
-                    case 8:
-                        resolve(event);
-                        return [3 /*break*/, 10];
-                    case 9:
-                        reject("找不到事件 EventId: " + id.toString());
-                        _e.label = 10;
-                    case 10: return [2 /*return*/];
+                        return [3 /*break*/, 1];
+                    case 4:
+                        resolve(result);
+                        return [3 /*break*/, 6];
+                    case 5:
+                        reject("用户不存在");
+                        _b.label = 6;
+                    case 6: return [2 /*return*/];
                 }
             });
-        }); })
-            .catch(function (reason) {
-            reject(reason);
-        });
+        }); });
     });
 }
-exports.default = selectEvent;
+exports.default = selectTooluser;

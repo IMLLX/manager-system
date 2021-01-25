@@ -1,6 +1,7 @@
 interface Poll {
   Id?: Number;
-  touserCode: Number;
+  touserCode?: Number;
+  touserCodes?: Array<Number>;
   impNumber: String;
   detail: String;
   fromuserCode: Number;

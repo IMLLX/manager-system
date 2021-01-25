@@ -7,9 +7,9 @@ var knex_1 = __importDefault(require("../static/knex"));
 var toSQL_1 = __importDefault(require("./toSQL"));
 function selectUser(userClientCode) {
     return new Promise(function (resolve, reject) {
-        var t = knex_1.default("role_info")
-            .select("role_dpCode", "role_name", "role_code", "client_role_code")
-            .where({ client_role_code: userClientCode })
+        var t = knex_1.default("tool_user")
+            .select("name", "username", "sex", "role", "user_code", "client_role", "role_type", "dept_code", "post_code")
+            .where({ user_code: userClientCode })
             .toQuery();
         toSQL_1.default(t)
             .then(function (result) {

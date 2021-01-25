@@ -7,10 +7,12 @@ var boom_1 = __importDefault(require("@hapi/boom"));
 var express_1 = __importDefault(require("express"));
 var selectByfilter_1 = __importDefault(require("../public/JavaScripts/function/selectByfilter"));
 var selectClass_1 = __importDefault(require("../public/JavaScripts/function/selectClass"));
+var selectTooluser_1 = __importDefault(require("../public/JavaScripts/function/selectTooluser"));
 var router = express_1.default.Router();
 router.get("/event", function (req, res) {
     var data = req.query;
-    selectByfilter_1.default(data).then(function (result) {
+    selectByfilter_1.default(data)
+        .then(function (result) {
         res.json({
             success: true,
             results: result.data,
@@ -24,11 +26,40 @@ router.get("/event", function (req, res) {
             },
             statusCode: 200,
         });
+    })
+        .catch(function (reason) {
+        if (reason.type === "NoneEventError") {
+            res.json({
+                success: true,
+                message: reason.message,
+                statusCode: 200,
+            });
+        }
+        else {
+            console.log(reason);
+            res.json(boom_1.default.badRequest(reason).output.payload);
+        }
     });
 });
 router.get("/class", function (req, res) {
     var filter = req.query;
     selectClass_1.default(filter)
+        .then(function (result) {
+        if (result) {
+            res.json({
+                statusCode: 200,
+                success: true,
+                result: result,
+            });
+        }
+    })
+        .catch(function (reason) {
+        res.json(boom_1.default.badRequest(reason).output.payload);
+    });
+});
+router.get("/user", function (req, res) {
+    var f = req.query;
+    selectTooluser_1.default(f)
         .then(function (result) {
         if (result) {
             res.json({

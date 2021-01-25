@@ -1,6 +1,6 @@
 interface Event {
   fromuserCode: Number;
-  touserCode: Number;
+  touserCode: any;
   name: String;
   impNumber: String;
   timeClass: Boolean;

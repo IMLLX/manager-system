@@ -1,6 +1,17 @@
 import knex from "../static/knex";
 import toSQL from "./toSQL";
 
+function createUsersPoll(poll: Poll) {
+  var polldata = poll;
+  var pros: Array<Promise<any>> = [];
+  delete polldata.touserCodes;
+  poll.touserCodes?.forEach((ele) => {
+    polldata.touserCode = ele;
+    pros.push(createPoll(polldata));
+  });
+  return pros;
+}
+
 function createPoll(poll: Poll) {
   return new Promise((resolve, reject) => {
     var t = knex("pollevent").insert(poll).toQuery();
@@ -14,4 +25,4 @@ function createPoll(poll: Poll) {
   });
 }
 
-export default createPoll;
+export default createUsersPoll;

@@ -123,12 +123,12 @@ function updateHandler(param, eventId, status) {
                                 selectEvent_1.default(eventId).then(function (event) {
                                     createPoll_1.default({
                                         impNumber: event.impNumber,
-                                        touserCode: event.touserCode,
+                                        touserCodes: event.touserCode,
                                         fromuserCode: event.fromuserCode,
                                         detail: event.detail_0,
                                         eventId: eventId,
                                         isReceived: false,
-                                    }).catch(function () { });
+                                    });
                                     resolve(event);
                                 });
                             }

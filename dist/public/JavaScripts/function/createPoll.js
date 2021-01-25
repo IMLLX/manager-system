@@ -5,6 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var knex_1 = __importDefault(require("../static/knex"));
 var toSQL_1 = __importDefault(require("./toSQL"));
+function createUsersPoll(poll) {
+    var _a;
+    var polldata = poll;
+    var pros = [];
+    delete polldata.touserCodes;
+    (_a = poll.touserCodes) === null || _a === void 0 ? void 0 : _a.forEach(function (ele) {
+        polldata.touserCode = ele;
+        pros.push(createPoll(polldata));
+    });
+    return pros;
+}
 function createPoll(poll) {
     return new Promise(function (resolve, reject) {
         var t = knex_1.default("pollevent").insert(poll).toQuery();
@@ -18,4 +29,4 @@ function createPoll(poll) {
         });
     });
 }
-exports.default = createPoll;
+exports.default = createUsersPoll;

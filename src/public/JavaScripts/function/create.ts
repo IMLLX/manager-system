@@ -1,5 +1,6 @@
+import { json } from "express";
 import knex from "../static/knex";
-import createPoll from "./createPoll";
+import createUsersPoll from "./createPoll";
 import getImpnum from "./getimpnum";
 import selectClass from "./selectClass";
 import selectEvent from "./selectEvent";
@@ -26,10 +27,16 @@ import toSQL from "./toSQL";
 //   });
 // }
 
+// 检查创建的事件是否合法
 function checkEvent(event: Event) {
   return new Promise(async (resolve, reject) => {
     var fromuser: any = await selectUser(event.fromuserCode);
-    var touser: any = await selectUser(event.touserCode);
+    // var touser: any = await selectUser(event.touserCode);
+    var touser: any = [];
+    for (let index = 0; index < event.touserCode.length; index++) {
+      const touserCode = event.touserCode[index];
+      touser.push(await selectUser(touserCode));
+    }
     var Class = await selectClass({
       classname: event.eventClass,
     }).catch((reason) => {
@@ -63,6 +70,16 @@ function checkEvent(event: Event) {
 //   });
 // }
 
+function eventsAdder(insertId: number, touserCode: any) {
+  touserCode = JSON.parse(touserCode);
+  touserCode.forEach((code: any) => {
+    var t = knex("events")
+      .insert({ eventId: insertId, touserCode: code })
+      .toQuery();
+    toSQL(t);
+  });
+}
+
 function createEvent(event: Event) {
   return new Promise((resolve, reject) => {
     // handleClass({
@@ -73,28 +90,25 @@ function createEvent(event: Event) {
       .then(async (Class: any) => {
         if (event.sendStatus === 1) {
           // 若创建发送事件
-          event.impNumber = await getImpnum(
-            // event.eventClass,
-            // event.eventClassCode
-            Class.classname,
-            Class.code
-          );
+          event.impNumber = await getImpnum(Class.classname, Class.code);
         }
         event.eventClassCode = Class.code;
+        event.touserCode = JSON.stringify(event.touserCode);
         var to = knex("eventdata").insert(event).toQuery();
         toSQL(to)
           .then((res: any) => {
             if (!res.warningCount) {
               var insertId = res.insertId;
+              eventsAdder(insertId, event.touserCode);
               selectEvent(insertId).then((event) => {
-                createPoll({
+                createUsersPoll({
                   impNumber: event.impNumber,
-                  touserCode: event.touserCode,
+                  touserCodes: event.touserCode,
                   fromuserCode: event.fromuserCode,
                   detail: event.detail_0,
                   eventId: insertId,
                   isReceived: false,
-                }).catch(() => {});
+                });
                 resolve(event);
               });
             }
