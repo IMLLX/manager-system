@@ -41,55 +41,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var knex_1 = __importDefault(require("../static/knex"));
 var toSQL_1 = __importDefault(require("./toSQL"));
-function roleAdder(user) {
+function selectRoleinfo(data) {
     return __awaiter(this, void 0, void 0, function () {
-        var t, _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var t;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    t = knex_1.default("role_info")
-                        .select("role_name", "dept_code", "dept_name", "post_code", "role_type")
-                        .where({
-                        dept_code: user.dept_code,
-                        post_code: user.post_code,
-                        role_type: user.role_type,
-                    })
-                        .toQuery();
-                    _a = user;
+                    t = knex_1.default("role_info").select("*").where(data).toQuery();
                     return [4 /*yield*/, toSQL_1.default(t)];
-                case 1:
-                    _a.role_info = (_b.sent())[0];
-                    delete user.dept_code, delete user.post_code, delete user.role_type;
-                    return [2 /*return*/, user];
+                case 1: return [2 /*return*/, (_a.sent())[0]];
             }
         });
     });
 }
-function selectUser(userClientCode) {
-    return new Promise(function (resolve, reject) {
-        var t = knex_1.default("tool_user")
-            .select("name", "username", "sex", "role", "user_code", "client_role", "role_type", "dept_code", "post_code")
-            .where({ user_code: userClientCode })
-            .toQuery();
-        toSQL_1.default(t)
-            .then(function (result) {
-            if (result[0]) {
-                result = result[0];
-                roleAdder(result).then(function (result) {
-                    resolve(result);
-                });
-            }
-            else {
-                resolve({
-                    message: "找不到用户 " + userClientCode.toString(),
-                    error: true,
-                    userCode: userClientCode,
-                });
-            }
-        })
-            .catch(function (err) {
-            reject(err);
-        });
-    });
-}
-exports.default = selectUser;
+exports.default = selectRoleinfo;

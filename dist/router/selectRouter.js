@@ -9,8 +9,45 @@ var selectByfilter_1 = __importDefault(require("../public/JavaScripts/function/s
 var selectClass_1 = __importDefault(require("../public/JavaScripts/function/selectClass"));
 var selectTooluser_1 = __importDefault(require("../public/JavaScripts/function/selectTooluser"));
 var router = express_1.default.Router();
-router.get("/event", function (req, res) {
-    var data = req.query;
+// function fieldhandler(f: any) {
+//   var h: any = {};
+//   if (f.role_name) {
+//     // h.role_name = f.role_name;
+//     Object.assign(h, f.role_name);
+//     delete f.role_name;
+//   }
+//   if (f.dept_name) {
+//     // h.dept_name = f.dept_name;
+//     Object.assign(h, f.dept_name);
+//     delete f.dept_name;
+//   }
+//   return h;
+// }
+// async function namehandler(data: any) {
+//   var ht: any = {};
+//   var hf: any = {};
+//   if (data.toUser) {
+//     ht = fieldhandler(data.toUser);
+//   }
+//   if (data.fromUser) {
+//     hf = fieldhandler(data.fromUser);
+//   }
+//   if (Object.keys(hf).length) {
+//     var fromRoleinfo = await selectRoleinfo(hf);
+//     (data.fromUser.dept_code = fromRoleinfo.dept_code),
+//       (data.fromUser.post_code = fromRoleinfo.post_code),
+//       (data.fromUser.role_type = fromRoleinfo.role_type);
+//   }
+//   if (Object.keys(ht).length) {
+//     var toRoleinfo = await selectRoleinfo(ht);
+//     (data.toUser.dept_code = toRoleinfo.dept_code),
+//       (data.toUser.post_code = toRoleinfo.post_code),
+//       (data.toUser.role_type = toRoleinfo.role_type);
+//   }
+//   return data;
+// }
+router.post("/event", function (req, res) {
+    var data = req.body;
     selectByfilter_1.default(data)
         .then(function (result) {
         res.json({

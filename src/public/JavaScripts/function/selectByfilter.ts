@@ -47,14 +47,13 @@ function selectByfilter(data: any) {
       k_limit.limit(pageSize).offset((currPage - 1) * pageSize);
     }
     // 接收者特判
-    var touserCode = data.touserCode;
-    if (data.touserCode) {
-      // 如果传来了 touserCode 则需要进行特判
+    // var toUser = data.toUser;
+    var toUser: any = {};
+    if (data.toUser) {
+      // 如果传来了 toUser 则需要进行特判
+      toUser = Object.assign({}, data.toUser);
       var ids = []; // 限制 id
-      var k = knex("events")
-        .select("eventId")
-        .where({ touserCode: data.touserCode })
-        .toQuery();
+      var k = knex("events").select("eventId").where(toUser).toQuery();
       var IdArray = await toSQL(k);
       if (IdArray[0]) {
         // 如果存在事件
@@ -62,26 +61,58 @@ function selectByfilter(data: any) {
           const id = IdArray[index];
           ids.push(id.eventId);
         }
+        k_count.whereIn("Id", ids);
+        k_limit.whereIn("Id", ids);
       } else {
         reject({
-          message: `用户 ${data.touserCode} 暂无待接收事件`,
+          message: `无满足条件的事件`,
           type: "NoneEventError",
         });
       }
-      k_count.whereIn("Id", ids);
-      k_limit.whereIn("Id", ids);
-      delete data.touserCode;
+      delete data.toUser;
     }
-    // 总数
-    k_count.count("*", { as: "CountResult" }).where(data);
-    k_limit.where(data).select("Id");
+    var fromUser = data.fromUser;
+    // 发送者筛选
+    if (data.fromUser) {
+      var ids = []; // 限制 id
+      var k = knex("eventdata").select("Id").where(fromUser).toQuery();
+      var IdArray = await toSQL(k);
+      if (IdArray[0]) {
+        // 如果存在事件
+        for (let index = 0; index < IdArray.length; index++) {
+          const id = IdArray[index];
+          ids.push(id.Id);
+        }
+        k_count.whereIn("Id", ids);
+        k_limit.whereIn("Id", ids);
+      } else {
+        reject({
+          message: `无满足条件的事件`,
+          type: "NoneEventError",
+        });
+      }
+      delete data.fromUser;
+    }
+    if (Object.keys(data).length) {
+      // 总数
+      k_count.where(data);
+      k_limit.where(data);
+    }
+    k_count.count("*", { as: "CountResult" });
+    k_limit.select("Id");
     var CountResult: any = await toSQL(k_count.toQuery());
     var eventIds: any = await toSQL(k_limit.toQuery());
     var pros: Array<Promise<Event>> = [];
     // 获取事件
-    eventIds.forEach((element: any) => {
-      pros.push(selectEvent(element.Id, touserCode));
-    });
+    if (toUser.hasOwnProperty("touserCode")) {
+      eventIds.forEach((element: any) => {
+        pros.push(selectEvent(element.Id, toUser.touserCode));
+      });
+    } else {
+      eventIds.forEach((element: any) => {
+        pros.push(selectEvent(element.Id));
+      });
+    }
     Promise.all(pros).then((events) => {
       resolve({
         data: events,

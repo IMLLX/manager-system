@@ -126,9 +126,20 @@ path: select/event
 // 会返回事件的所有接收者
 REQUEST:
 {
+    // 这里不再传入 touserCode 改到下面传入
 	// touserCode: 104,
     Id :75,
 	createTime: 2021
+    toUser: {
+    	// role_info 中的数据
+    	// role_info:{
+    	role_name: "总经理",
+    	dept_name: "总经办"
+		// },
+    	// tool_user:{
+        user_code: "101"
+        // }
+	}
 }
 
 RESPOND:

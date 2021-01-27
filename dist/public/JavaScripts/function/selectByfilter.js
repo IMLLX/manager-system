@@ -63,7 +63,7 @@ function handleTime(time, tar) {
 function selectByfilter(data) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-        var k_count, k_limit, pageSize, currPage, touserCode, ids, k, IdArray, index, id, CountResult, eventIds, pros;
+        var k_count, k_limit, pageSize, currPage, toUser, ids, k, IdArray, index, id, fromUser, ids, k, IdArray, index, id, CountResult, eventIds, pros;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -89,13 +89,12 @@ function selectByfilter(data) {
                         delete data.currPage;
                         k_limit.limit(pageSize).offset((currPage - 1) * pageSize);
                     }
-                    touserCode = data.touserCode;
-                    if (!data.touserCode) return [3 /*break*/, 2];
+                    toUser = {};
+                    if (!data.toUser) return [3 /*break*/, 2];
+                    // 如果传来了 toUser 则需要进行特判
+                    toUser = Object.assign({}, data.toUser);
                     ids = [];
-                    k = knex_1.default("events")
-                        .select("eventId")
-                        .where({ touserCode: data.touserCode })
-                        .toQuery();
+                    k = knex_1.default("events").select("eventId").where(toUser).toQuery();
                     return [4 /*yield*/, toSQL_1.default(k)];
                 case 1:
                     IdArray = _a.sent();
@@ -105,32 +104,68 @@ function selectByfilter(data) {
                             id = IdArray[index];
                             ids.push(id.eventId);
                         }
+                        k_count.whereIn("Id", ids);
+                        k_limit.whereIn("Id", ids);
                     }
                     else {
                         reject({
-                            message: "\u7528\u6237 " + data.touserCode + " \u6682\u65E0\u5F85\u63A5\u6536\u4E8B\u4EF6",
+                            message: "\u65E0\u6EE1\u8DB3\u6761\u4EF6\u7684\u4E8B\u4EF6",
                             type: "NoneEventError",
                         });
                     }
-                    k_count.whereIn("Id", ids);
-                    k_limit.whereIn("Id", ids);
-                    delete data.touserCode;
+                    delete data.toUser;
                     _a.label = 2;
                 case 2:
-                    // 总数
-                    k_count.count("*", { as: "CountResult" }).where(data);
-                    k_limit.where(data).select("Id");
-                    return [4 /*yield*/, toSQL_1.default(k_count.toQuery())];
+                    fromUser = data.fromUser;
+                    if (!data.fromUser) return [3 /*break*/, 4];
+                    ids = [];
+                    k = knex_1.default("eventdata").select("Id").where(fromUser).toQuery();
+                    return [4 /*yield*/, toSQL_1.default(k)];
                 case 3:
+                    IdArray = _a.sent();
+                    if (IdArray[0]) {
+                        // 如果存在事件
+                        for (index = 0; index < IdArray.length; index++) {
+                            id = IdArray[index];
+                            ids.push(id.Id);
+                        }
+                        k_count.whereIn("Id", ids);
+                        k_limit.whereIn("Id", ids);
+                    }
+                    else {
+                        reject({
+                            message: "\u65E0\u6EE1\u8DB3\u6761\u4EF6\u7684\u4E8B\u4EF6",
+                            type: "NoneEventError",
+                        });
+                    }
+                    delete data.fromUser;
+                    _a.label = 4;
+                case 4:
+                    if (Object.keys(data).length) {
+                        // 总数
+                        k_count.where(data);
+                        k_limit.where(data);
+                    }
+                    k_count.count("*", { as: "CountResult" });
+                    k_limit.select("Id");
+                    return [4 /*yield*/, toSQL_1.default(k_count.toQuery())];
+                case 5:
                     CountResult = _a.sent();
                     return [4 /*yield*/, toSQL_1.default(k_limit.toQuery())];
-                case 4:
+                case 6:
                     eventIds = _a.sent();
                     pros = [];
                     // 获取事件
-                    eventIds.forEach(function (element) {
-                        pros.push(selectEvent_1.default(element.Id, touserCode));
-                    });
+                    if (toUser.hasOwnProperty("touserCode")) {
+                        eventIds.forEach(function (element) {
+                            pros.push(selectEvent_1.default(element.Id, toUser.touserCode));
+                        });
+                    }
+                    else {
+                        eventIds.forEach(function (element) {
+                            pros.push(selectEvent_1.default(element.Id));
+                        });
+                    }
                     Promise.all(pros).then(function (events) {
                         resolve({
                             data: events,

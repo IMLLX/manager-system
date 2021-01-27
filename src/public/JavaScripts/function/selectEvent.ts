@@ -4,7 +4,39 @@ import toSQL from "./toSQL";
 
 function selectEvent(id: Number, touserCode?: Number): Promise<Event> {
   return new Promise((resolve, reject) => {
-    var t = knex("eventdata").select("*").where({ Id: id }).toQuery();
+    var t = knex("eventdata")
+      .select(
+        "Id",
+        "fromuserCode",
+        "touserCode",
+        "name",
+        "impNumber",
+        "timeClass",
+        "createTime",
+        "processedTime",
+        "updateTime",
+        "sendTime",
+        "receiveTime",
+        "eventClass",
+        "eventClassCode",
+        "sendStatus",
+        "receiveStatus",
+        "handleStatus",
+        "routeCode",
+        "detail_0",
+        "detail_1",
+        "detail_2",
+        "detail_3",
+        "detail_4",
+        "detail_5",
+        "detail_6",
+        "detail_7",
+        "detail_8",
+        "detail_9",
+        "detail_10"
+      )
+      .where({ Id: id })
+      .toQuery();
     toSQL(t)
       .then(async (event: any) => {
         if (event[0]) {

@@ -45,7 +45,10 @@ var toSQL_1 = __importDefault(require("./toSQL"));
 function selectEvent(id, touserCode) {
     var _this = this;
     return new Promise(function (resolve, reject) {
-        var t = knex_1.default("eventdata").select("*").where({ Id: id }).toQuery();
+        var t = knex_1.default("eventdata")
+            .select("Id", "fromuserCode", "touserCode", "name", "impNumber", "timeClass", "createTime", "processedTime", "updateTime", "sendTime", "receiveTime", "eventClass", "eventClassCode", "sendStatus", "receiveStatus", "handleStatus", "routeCode", "detail_0", "detail_1", "detail_2", "detail_3", "detail_4", "detail_5", "detail_6", "detail_7", "detail_8", "detail_9", "detail_10")
+            .where({ Id: id })
+            .toQuery();
         toSQL_1.default(t)
             .then(function (event) { return __awaiter(_this, void 0, void 0, function () {
             var _a, _b, toUser, touserCodes, index, touserCode_1, _c, _d;

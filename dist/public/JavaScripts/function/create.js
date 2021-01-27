@@ -44,6 +44,7 @@ var createPoll_1 = __importDefault(require("./createPoll"));
 var getimpnum_1 = __importDefault(require("./getimpnum"));
 var selectClass_1 = __importDefault(require("./selectClass"));
 var selectEvent_1 = __importDefault(require("./selectEvent"));
+var selectTooluser_1 = __importDefault(require("./selectTooluser"));
 var selectUser_1 = __importDefault(require("./selectUser"));
 var toSQL_1 = __importDefault(require("./toSQL"));
 // function handleClass(eventclass: EventClss) {
@@ -129,13 +130,30 @@ function checkEvent(event) {
 //   });
 // }
 function eventsAdder(insertId, touserCode) {
+    var _this = this;
+    // 向 events 表中添加数据
     touserCode = JSON.parse(touserCode);
-    touserCode.forEach(function (code) {
-        var t = knex_1.default("events")
-            .insert({ eventId: insertId, touserCode: code })
-            .toQuery();
-        toSQL_1.default(t);
-    });
+    touserCode.forEach(function (usercode) { return __awaiter(_this, void 0, void 0, function () {
+        var touser, t;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, selectTooluser_1.default({ user_code: usercode })];
+                case 1:
+                    touser = (_a.sent())[0];
+                    t = knex_1.default("events")
+                        .insert({
+                        eventId: insertId,
+                        touserCode: usercode,
+                        todeptCode: touser.dept_code,
+                        toroleType: touser.role_type,
+                        topostCode: touser.post_code,
+                    })
+                        .toQuery();
+                    toSQL_1.default(t);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 }
 function createEvent(event) {
     var _this = this;
@@ -146,7 +164,7 @@ function createEvent(event) {
         // }).then();
         checkEvent(event) // 创建事件前的检查
             .then(function (Class) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, to;
+            var _a, fromuser, to;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -160,9 +178,17 @@ function createEvent(event) {
                         _b.label = 2;
                     case 2:
                         event.eventClassCode = Class.code;
+                        return [4 /*yield*/, selectTooluser_1.default({ user_code: event.fromuserCode })];
+                    case 3:
+                        fromuser = (_b.sent())[0];
+                        // 发送人部门岗位信息挂载
+                        (event.fromroleType = fromuser.role_type),
+                            (event.frompostCode = fromuser.post_code),
+                            (event.fromdeptCode = fromuser.dept_code);
                         event.touserCode = JSON.stringify(event.touserCode);
                         to = knex_1.default("eventdata").insert(event).toQuery();
                         toSQL_1.default(to)
+                            // eventdata 注入
                             .then(function (res) {
                             if (!res.warningCount) {
                                 var insertId = res.insertId;
@@ -170,7 +196,7 @@ function createEvent(event) {
                                 selectEvent_1.default(insertId).then(function (event) {
                                     event.touserCode = JSON.parse(event.touserCode);
                                     if (event.sendStatus === 1)
-                                        // 如果发送事件
+                                        // 如果发送事件 创建通知
                                         createPoll_1.default({
                                             impNumber: event.impNumber,
                                             touserCodes: event.touserCode,

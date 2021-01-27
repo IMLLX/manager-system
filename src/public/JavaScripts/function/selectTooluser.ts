@@ -2,7 +2,7 @@ import knex from "../static/knex";
 import addRoleinfo from "./addRoleinfo";
 import toSQL from "./toSQL";
 
-function selectTooluser(data: any) {
+function selectTooluser(data: any):Promise<any> {
   return new Promise((resolve, reject) => {
     var q = knex("tool_user")
       .select(
