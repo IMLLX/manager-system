@@ -7,6 +7,8 @@ var boom_1 = __importDefault(require("@hapi/boom"));
 var express_1 = __importDefault(require("express"));
 var selectByfilter_1 = __importDefault(require("../public/JavaScripts/function/selectByfilter"));
 var selectClass_1 = __importDefault(require("../public/JavaScripts/function/selectClass"));
+var selectColumn_1 = __importDefault(require("../public/JavaScripts/function/selectColumn"));
+var selectRoleinfo_1 = __importDefault(require("../public/JavaScripts/function/selectRoleinfo"));
 var selectTooluser_1 = __importDefault(require("../public/JavaScripts/function/selectTooluser"));
 var router = express_1.default.Router();
 // function fieldhandler(f: any) {
@@ -108,6 +110,26 @@ router.get("/user", function (req, res) {
     })
         .catch(function (reason) {
         res.json(boom_1.default.badRequest(reason).output.payload);
+    });
+});
+router.get("/role_info", function (req, res) {
+    var data = req.query;
+    selectRoleinfo_1.default(data).then(function (result) {
+        res.json({
+            result: result,
+            success: true,
+            statusCode: 200,
+        });
+    });
+});
+router.get("/column", function (req, res) {
+    var name = req.query.name;
+    selectColumn_1.default(name).then(function (result) {
+        res.json({
+            result: result,
+            success: true,
+            statusCode: 200,
+        });
     });
 });
 exports.default = router;

@@ -41,20 +41,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var knex_1 = __importDefault(require("../static/knex"));
 var toSQL_1 = __importDefault(require("./toSQL"));
-function selectRoleinfo(data) {
+function selectColumn(name) {
     return __awaiter(this, void 0, void 0, function () {
-        var t;
+        var rest, t;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    t = knex_1.default("role_info")
-                        .select("role_name", "dept_code", "dept_name", "post_code", "post_name1", "role_type")
-                        .where(data)
-                        .toQuery();
+                    if (!name) return [3 /*break*/, 2];
+                    rest = "";
+                    if (name === "dept_name")
+                        rest = "dept_code";
+                    if (name === "post_name1")
+                        rest = "post_code";
+                    if (name === "role_name")
+                        rest = "client_role_code";
+                    t = knex_1.default("role_info").distinct(name, rest).toQuery();
                     return [4 /*yield*/, toSQL_1.default(t)];
                 case 1: return [2 /*return*/, _a.sent()];
+                case 2: return [2 /*return*/, "BAD_REQUEST"];
             }
         });
     });
 }
-exports.default = selectRoleinfo;
+exports.default = selectColumn;

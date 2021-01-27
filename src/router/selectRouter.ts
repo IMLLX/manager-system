@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import express from "express";
 import selectByfilter from "../public/JavaScripts/function/selectByfilter";
 import selectClass from "../public/JavaScripts/function/selectClass";
+import selectColumn from "../public/JavaScripts/function/selectColumn";
 import selectRoleinfo from "../public/JavaScripts/function/selectRoleinfo";
 import selectTooluser from "../public/JavaScripts/function/selectTooluser";
 var router = express.Router();
@@ -109,6 +110,28 @@ router.get("/user", function (req, res) {
     .catch((reason) => {
       res.json(Boom.badRequest(reason).output.payload);
     });
+});
+
+router.get("/role_info", function (req, res) {
+  var data = req.query;
+  selectRoleinfo(data).then((result) => {
+    res.json({
+      result: result,
+      success: true,
+      statusCode: 200,
+    });
+  });
+});
+
+router.get("/column", function (req, res) {
+  var name: any = req.query.name;
+  selectColumn(name).then((result) => {
+    res.json({
+      result: result,
+      success: true,
+      statusCode: 200,
+    });
+  });
 });
 
 export default router;

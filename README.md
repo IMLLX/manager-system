@@ -486,7 +486,124 @@ RESPOND:
         }
     ]
 }
+
+REQUEST:
+{
+    role_type: 1
+}
+RESPOND:
+{
+    "result": [
+        {
+            "role_name": "总经理",
+            "dept_code": "100",
+            "dept_name": "总经办",
+            "post_code": "101",
+            "post_name1": "总经理",
+            "role_type": "1"
+        },
+        {
+            "role_name": "总经理助理",
+            "dept_code": "100",
+            "dept_name": "总经办",
+            "post_code": "103",
+            "post_name1": "总经理助理",
+            "role_type": "1"
+        }
+    ],
+    "success": true,
+    "statusCode": 200
+}
 ```
+
+### select/column
+
+筛选 role_info 信息不重复
+
+```
+method: GET
+path: select/column
+
+REQUEST:
+{
+	name: post_name1
+}
+RESPOND:
+
+{
+    "result": [
+        {
+            "post_name1": "总经理",
+            "post_code": "101"
+        },
+        {
+            "post_name1": "职能主管",
+            "post_code": "401"
+        },
+        {
+            "post_name1": "业务主管",
+            "post_code": "201"
+        },
+        {
+            "post_name1": "门店店长",
+            "post_code": "301"
+        },
+        {
+            "post_name1": "门店副店长",
+            "post_code": "302"
+        },
+        {
+            "post_name1": "会计",
+            "post_code": "503"
+        },
+        {
+            "post_name1": "出纳",
+            "post_code": "504"
+        },
+        {
+            "post_name1": "后勤",
+            "post_code": "702"
+        },
+        {
+            "post_name1": "业务员",
+            "post_code": "601"
+        },
+        {
+            "post_name1": "司机",
+            "post_code": "703"
+        },
+        {
+            "post_name1": "销售跟单",
+            "post_code": "501"
+        },
+        {
+            "post_name1": "业务员",
+            "post_code": "602"
+        },
+        {
+            "post_name1": "售后员",
+            "post_code": "602"
+        },
+        {
+            "post_name1": "总经理助理",
+            "post_code": "103"
+        },
+        {
+            "post_name1": "库管员",
+            "post_code": "701"
+        },
+        {
+            "post_name1": "售后跟单",
+            "post_code": "502"
+        }
+    ],
+    "success": true,
+    "statusCode": 200
+}
+
+```
+
+
 
 ### select/class
 
@@ -608,6 +725,299 @@ RESPOND:
     ]
 }
 ```
+
+### select/role_info
+
+根据传来的信息筛选符合条件的部门/岗位（不查重）
+
+```
+method: GET
+path: select/role_info
+
+REQUEST:
+{}
+RESPOND:
+{
+    "result": [
+        {
+            "role_name": "总经理",
+            "dept_code": "100",
+            "dept_name": "总经办",
+            "post_code": "101",
+            "post_name1": "总经理",
+            "role_type": "1"
+        },
+        {
+            "role_name": "财务主管",
+            "dept_code": "410",
+            "dept_name": "财务部",
+            "post_code": "401",
+            "post_name1": "职能主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "渠道部主管",
+            "dept_code": "220",
+            "dept_name": "渠道部",
+            "post_code": "201",
+            "post_name1": "业务主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "外贸部主管",
+            "dept_code": "211",
+            "dept_name": "外贸部",
+            "post_code": "201",
+            "post_name1": "业务主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "国内业务组主管",
+            "dept_code": "212",
+            "dept_name": "业务部",
+            "post_code": "201",
+            "post_name1": "业务主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "大沥门店店长",
+            "dept_code": "310",
+            "dept_name": "大沥门店",
+            "post_code": "301",
+            "post_name1": "门店店长",
+            "role_type": "2"
+        },
+        {
+            "role_name": "大沥门店副店长",
+            "dept_code": "310",
+            "dept_name": "大沥门店",
+            "post_code": "302",
+            "post_name1": "门店副店长",
+            "role_type": "2"
+        },
+        {
+            "role_name": "中山门店店长",
+            "dept_code": "320",
+            "dept_name": "中山门店",
+            "post_code": "301",
+            "post_name1": "门店店长",
+            "role_type": "2"
+        },
+        {
+            "role_name": "武汉门店店长",
+            "dept_code": "330",
+            "dept_name": "武汉门店",
+            "post_code": "301",
+            "post_name1": "门店店长",
+            "role_type": "2"
+        },
+        {
+            "role_name": "人事部主管",
+            "dept_code": "420",
+            "dept_name": "人事行政部",
+            "post_code": "401",
+            "post_name1": "职能主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "财务部会计",
+            "dept_code": "410",
+            "dept_name": "财务部",
+            "post_code": "503",
+            "post_name1": "会计",
+            "role_type": "3"
+        },
+        {
+            "role_name": "财务部出纳",
+            "dept_code": "410",
+            "dept_name": "财务部",
+            "post_code": "504",
+            "post_name1": "出纳",
+            "role_type": "3"
+        },
+        {
+            "role_name": "人事部后勤",
+            "dept_code": "420",
+            "dept_name": "人事行政部",
+            "post_code": "702",
+            "post_name1": "后勤",
+            "role_type": "3"
+        },
+        {
+            "role_name": "渠道部业务员",
+            "dept_code": "220",
+            "dept_name": "渠道部",
+            "post_code": "601",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "外贸组业务员",
+            "dept_code": "211",
+            "dept_name": "外贸部",
+            "post_code": "601",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "大沥门店司机",
+            "dept_code": "310",
+            "dept_name": "大沥门店",
+            "post_code": "703",
+            "post_name1": "司机",
+            "role_type": "3"
+        },
+        {
+            "role_name": "大沥门店销售跟单",
+            "dept_code": "310",
+            "dept_name": "大沥门店",
+            "post_code": "501",
+            "post_name1": "销售跟单",
+            "role_type": "3"
+        },
+        {
+            "role_name": "大沥门店业务员",
+            "dept_code": "310",
+            "dept_name": "大沥门店",
+            "post_code": "601",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "中山门店业务员",
+            "dept_code": "320",
+            "dept_name": "中山门店",
+            "post_code": "601",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "中山门店售后员",
+            "dept_code": "320",
+            "dept_name": "中山门店",
+            "post_code": "602",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "中山门店司机",
+            "dept_code": "320",
+            "dept_name": "中山门店",
+            "post_code": "703",
+            "post_name1": "司机",
+            "role_type": "3"
+        },
+        {
+            "role_name": "中山门店销售跟单",
+            "dept_code": "320",
+            "dept_name": "中山门店",
+            "post_code": "501",
+            "post_name1": "销售跟单",
+            "role_type": "3"
+        },
+        {
+            "role_name": "武汉门店销售跟单",
+            "dept_code": "330",
+            "dept_name": "武汉门店",
+            "post_code": "501",
+            "post_name1": "销售跟单",
+            "role_type": "3"
+        },
+        {
+            "role_name": "武汉门店售后员",
+            "dept_code": "330",
+            "dept_name": "武汉门店",
+            "post_code": "602",
+            "post_name1": "售后员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "武汉门店司机",
+            "dept_code": "330",
+            "dept_name": "武汉门店",
+            "post_code": "703",
+            "post_name1": "司机",
+            "role_type": "3"
+        },
+        {
+            "role_name": "总经理助理",
+            "dept_code": "100",
+            "dept_name": "总经办",
+            "post_code": "103",
+            "post_name1": "总经理助理",
+            "role_type": "1"
+        },
+        {
+            "role_name": "国内业务组销售跟单",
+            "dept_code": "212",
+            "dept_name": "业务部",
+            "post_code": "501",
+            "post_name1": "销售跟单",
+            "role_type": "3"
+        },
+        {
+            "role_name": "国内业务组业务员",
+            "dept_code": "212",
+            "dept_name": "业务部",
+            "post_code": "601",
+            "post_name1": "业务员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "国内业务组后勤",
+            "dept_code": "212",
+            "dept_name": "业务部",
+            "post_code": "702",
+            "post_name1": "后勤",
+            "role_type": "3"
+        },
+        {
+            "role_name": "采购部主管",
+            "dept_code": "230",
+            "dept_name": "采购部",
+            "post_code": "201",
+            "post_name1": "业务主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "采购部库管员",
+            "dept_code": "230",
+            "dept_name": "采购部",
+            "post_code": "701",
+            "post_name1": "库管员",
+            "role_type": "3"
+        },
+        {
+            "role_name": "售后部主管",
+            "dept_code": "240",
+            "dept_name": "售后部",
+            "post_code": "201",
+            "post_name1": "业务主管",
+            "role_type": "2"
+        },
+        {
+            "role_name": "售后部售后跟单",
+            "dept_code": "240",
+            "dept_name": "售后部",
+            "post_code": "502",
+            "post_name1": "售后跟单",
+            "role_type": "3"
+        },
+        {
+            "role_name": "售后部售后员",
+            "dept_code": "240",
+            "dept_name": "售后部",
+            "post_code": "602",
+            "post_name1": "售后员",
+            "role_type": "3"
+        }
+    ],
+    "success": true,
+    "statusCode": 200
+}
+```
+
+
 
 ## 2.create
 
