@@ -5,6 +5,7 @@ import createClass from "../public/JavaScripts/function/createClass";
 import createEventSchema from "../public/Json/createEvent.Schema.json";
 import createClassSchema from "../public/Json/createClass.Schema.json";
 import Ajv from "ajv";
+import diyCode from "../public/JavaScripts/function/diyCode";
 
 var router = express.Router();
 
@@ -48,20 +49,36 @@ router.post("/class", function (req, res) {
     });
   } else {
     var classname = req.body.classname || req.query.classname;
-    createClass(classname)
-      .catch((reason) => {
-        var b = Boom.badRequest(reason);
-        res.json(b.output.payload);
-      })
-      .then((result) => {
-        if (result) {
+    var code = req.body.code || "";
+    if (!Object.keys(code).length) {
+      // 未传入code 由系统生成
+      createClass(classname)
+        .catch((reason) => {
+          var b = Boom.badRequest(reason);
+          res.json(b.output.payload);
+        })
+        .then((result) => {
+          if (result) {
+            res.json({
+              statusCode: 200,
+              success: true,
+              result: result,
+            });
+          }
+        });
+    } else {
+      diyCode(req.body)
+        .then((result) => {
           res.json({
             statusCode: 200,
             success: true,
             result: result,
           });
-        }
-      });
+        })
+        .catch((reason) => {
+          res.json(Boom.badRequest(reason).output.payload);
+        });
+    }
   }
 });
 

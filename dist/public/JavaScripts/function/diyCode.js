@@ -41,56 +41,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var knex_1 = __importDefault(require("../static/knex"));
 var selectClass_1 = __importDefault(require("./selectClass"));
-var zerofill = require("zero-fill");
 var toSQL_1 = __importDefault(require("./toSQL"));
-function getClassCode() {
-    return new Promise(function (resolve, reject) {
-        var t = knex_1.default("eventinfo").count("*", { as: "count" }).toQuery();
-        toSQL_1.default(t).then(function (result) {
-            if (result) {
-                var cout = (result[0].count + 1).toString(16);
-                resolve(cout);
-            }
-        });
-    });
-}
-function createClass(classname) {
+function diyCode(data) {
     var _this = this;
+    //   if (( selectClass({ classname: data.classname }))[0]) {
+    //     return "已经存在的事件名称";
+    //   }
+    //   var t = knex("eventinfo").insert(data).toQuery();
+    //   return await toSQL(t);
     return new Promise(function (resolve, reject) {
-        selectClass_1.default({ classname: classname })
-            .then(function (res) {
-            if (res[0]) {
-                reject("已经存在的事件类型");
+        selectClass_1.default({ classname: data.classname })
+            .catch(function (reason) { })
+            .then(function (result) {
+            if (result) {
+                reject("已经存在的事件");
             }
-        })
-            .catch(function (reason) {
-            if (reason === "未知的事件类型") {
-                getClassCode().then(function (code) {
-                    code = zerofill(2, code);
-                    var t = knex_1.default("eventinfo")
-                        .insert({
-                        classname: classname,
-                        code: code,
-                    })
-                        .toQuery();
-                    toSQL_1.default(t).then(function (result) { return __awaiter(_this, void 0, void 0, function () {
-                        var Class;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    if (!!result.warningCount) return [3 /*break*/, 2];
-                                    return [4 /*yield*/, selectClass_1.default({ classname: classname })];
-                                case 1:
-                                    Class = _a.sent();
-                                    resolve(Class[0]);
-                                    _a.label = 2;
-                                case 2: return [2 /*return*/];
-                            }
-                        });
-                    }); });
-                });
+            else {
+                var t = knex_1.default("eventinfo").insert(data).toQuery();
+                toSQL_1.default(t).then(function (result) { return __awaiter(_this, void 0, void 0, function () {
+                    var r;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!result.insertId) return [3 /*break*/, 2];
+                                return [4 /*yield*/, selectClass_1.default({ id: result.insertId })];
+                            case 1:
+                                r = (_a.sent())[0];
+                                resolve(r);
+                                _a.label = 2;
+                            case 2: return [2 /*return*/];
+                        }
+                    });
+                }); });
             }
         });
     });
 }
-exports.default = createClass;
+exports.default = diyCode;

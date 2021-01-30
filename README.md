@@ -140,6 +140,9 @@ REQUEST:
         user_code: "101"
         // }
 	}
+	fromUser:{
+        ...
+    }
 }
 
 RESPOND:
@@ -225,8 +228,12 @@ RESPOND:
 // 传入 touserCode
 // 只返回特定的接收者
 
+// toUser 可以传的参数: touserCode/topostCode/todeptCode/toroleType
+// fromUser 可以传的参数: fromuserCode/frompostCode/fromdeptCode/fromroleType
 {
-	touserCode: 104,
+    toUser:{
+        touserCode: 104,
+    }
     Id :75,
 	createTime: 2021
 }
@@ -487,33 +494,6 @@ RESPOND:
     ]
 }
 
-REQUEST:
-{
-    role_type: 1
-}
-RESPOND:
-{
-    "result": [
-        {
-            "role_name": "总经理",
-            "dept_code": "100",
-            "dept_name": "总经办",
-            "post_code": "101",
-            "post_name1": "总经理",
-            "role_type": "1"
-        },
-        {
-            "role_name": "总经理助理",
-            "dept_code": "100",
-            "dept_name": "总经办",
-            "post_code": "103",
-            "post_name1": "总经理助理",
-            "role_type": "1"
-        }
-    ],
-    "success": true,
-    "statusCode": 200
-}
 ```
 
 ### select/column

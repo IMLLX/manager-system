@@ -10,6 +10,7 @@ var createClass_1 = __importDefault(require("../public/JavaScripts/function/crea
 var createEvent_Schema_json_1 = __importDefault(require("../public/Json/createEvent.Schema.json"));
 var createClass_Schema_json_1 = __importDefault(require("../public/Json/createClass.Schema.json"));
 var ajv_1 = __importDefault(require("ajv"));
+var diyCode_1 = __importDefault(require("../public/JavaScripts/function/diyCode"));
 var router = express_1.default.Router();
 router.post("/event", function (req, res) {
     var ajv = new ajv_1.default();
@@ -52,20 +53,37 @@ router.post("/class", function (req, res) {
     }
     else {
         var classname = req.body.classname || req.query.classname;
-        createClass_1.default(classname)
-            .catch(function (reason) {
-            var b = boom_1.default.badRequest(reason);
-            res.json(b.output.payload);
-        })
-            .then(function (result) {
-            if (result) {
+        var code = req.body.code || "";
+        if (!Object.keys(code).length) {
+            // 未传入code 由系统生成
+            createClass_1.default(classname)
+                .catch(function (reason) {
+                var b = boom_1.default.badRequest(reason);
+                res.json(b.output.payload);
+            })
+                .then(function (result) {
+                if (result) {
+                    res.json({
+                        statusCode: 200,
+                        success: true,
+                        result: result,
+                    });
+                }
+            });
+        }
+        else {
+            diyCode_1.default(req.body)
+                .then(function (result) {
                 res.json({
                     statusCode: 200,
                     success: true,
                     result: result,
                 });
-            }
-        });
+            })
+                .catch(function (reason) {
+                res.json(boom_1.default.badRequest(reason).output.payload);
+            });
+        }
     }
 });
 exports.default = router;

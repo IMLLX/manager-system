@@ -19,7 +19,7 @@ function createClass(classname: string) {
   return new Promise((resolve, reject) => {
     selectClass({ classname: classname })
       .then((res: any) => {
-        if (res) {
+        if (res[0]) {
           reject("已经存在的事件类型");
         }
       })
@@ -35,7 +35,7 @@ function createClass(classname: string) {
               .toQuery();
             toSQL(t).then(async (result) => {
               if (!result.warningCount) {
-                var Class:any = await selectClass({ classname: classname });
+                var Class: any = await selectClass({ classname: classname });
                 resolve(Class[0]);
               }
             });
